@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Scanner;
 
 
 /**
@@ -321,9 +322,13 @@ public final class Point2D implements Comparable<Point2D> {
      * Unit tests the point data type.
      */
     public static void main(String[] args) {
-        int x0 = Integer.parseInt(args[0]);
-        int y0 = Integer.parseInt(args[1]);
-        int N = Integer.parseInt(args[2]);
+//        int x0 = Integer.parseInt(args[0]);
+//        int y0 = Integer.parseInt(args[1]);
+//        int N = Integer.parseInt(args[2]);
+    	Scanner sc=new Scanner(System.in);
+        int x0 = sc.nextInt();
+        int y0 = sc.nextInt();
+        int N = sc.nextInt();
 
         StdDraw.setCanvasSize(800, 800);
         StdDraw.setXscale(0, 100);
