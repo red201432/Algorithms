@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    	xmlns:p="http://www.springframework.org/schema/p"
+    	xmlns:context="http://www.springframework.org/schema/context"
+    	xmlns:aop="http://www.springframework.org/schema/aop"
+    	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.2.xsd"
+    >
+   <!--   <context:annotation-config />	-->
+   <context:component-scan base-package="springIdol">
+       <context:include-filter type="assignable" expression="springIdol.Instrument"></context:include-filter>
+   </context:component-scan>
+    <!-- property 和 命名空间 p 是等价的 -->
+    <bean id="duke" class="springIdol.Juggler" autowire="constructor">
+      <!--   <constructor-arg value="15"></constructor-arg> --> 
+    </bean>
+   
+    <!-- prototype 每次都生成新的实例， spring bean默认是单例模式，当容器分配一个Bean时，都会Bean的同一个实例 -->
+    <bean id="sonnet29" class="springIdol.Sonnet29" scope="prototype"></bean>
+    <bean id="poeticDuke" class="springIdol.PoeticJuggler" autowire="constructor" >
+        <!--  <constructor-arg value="15"></constructor-arg>
+        <constructor-arg ref="sonnet29"></constructor-arg> -->
+    </bean>
+    
+    <bean id="theStage" class="springIdol.Stage" factory-method="getInstance"></bean>
+    
+    <!--  <bean id="saxophone" class="springIdol.Sexophone"> </bean>-->
+    <bean id="kenny" class="springIdol.Instrumentalist"><!--  p:song="Jingle Bells" p:instrument-ref="saxophone" -->
+        
+    </bean>
+     <bean id="audience" class="springIdol.Audience"></bean>
+     <bean id="migician" class="springIdol.Migician"></bean>
+     <bean id="thinker" class="springIdol.Volunteer"></bean>
+     <!-- 声明切面 -->
+     <aop:config>
+         <aop:pointcut id="performance2" expression="execution(* springIdol.Performer.perform(..))" />
+         <aop:aspect ref="audience">
+             <aop:before pointcut="execution(* springIdol.Performer.perform(..))" method="takeSeats"></aop:before>
+             <aop:after pointcut="execution(* springIdol.Performer.perform(..))" method="turnOffCellPhone"></aop:after>
+             <aop:around pointcut-ref="performance2" method="watchPerformance"/><!-- 这儿的 方法没有（） -->
+         </aop:aspect>
+         <aop:aspect ref="migician">
+             <aop:pointcut expression="execution(* springIdol.Thinker.thinkOfSomthing(String)) and args(thoughts)" id="thinking"/> 
+             <aop:before method="interceptThoughts" pointcut-ref="thinking" arg-names="thoughts"/>            
+         </aop:aspect>
+         <aop:aspect><!-- 为实现Performer接口的类实现新的功能 -->
+             <aop:declare-parents types-matching="springIdol.Performer+" implement-interface="springIdol.Contestant"
+                 default-impl="springIdol.GraciousContestant"  />
+         </aop:aspect>
+     </aop:config>
+</beans>
